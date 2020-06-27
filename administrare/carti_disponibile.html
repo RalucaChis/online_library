@@ -1,0 +1,224 @@
+<?php
+	session_start();
+	
+	if ( !isset( $_SESSION['username'] ) ) {
+		header("location: login.php");
+	}
+?>
+<html lang="ro">
+<head>
+   <meta charset="UTF-8">
+   <title>Biblioteca Online</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body{
+	background-color: rgb(185, 122, 87);
+}
+h3,a{
+	color: rgb(255, 255, 153);
+	text-align: center;
+}
+div{
+	color: rgb(255, 255, 153);
+	padding-left:50px;
+}
+table,th,td {
+  font-size: 20px;
+  border : 1px solid rgb(255, 255, 153);
+  border-collapse: collapse;
+}
+th,td {
+  padding: 5px;
+  color: rgb(255, 255, 153);
+}
+.form {
+	width:35%;
+	color: rgb(255, 255, 153);
+	padding: 30px;
+	margin: 0 auto;
+}
+.fieldset {
+	border: 2px solid white;
+}
+.book{
+	width: 15%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto; 
+}
+#mySidenav a {
+  position: absolute;
+  left: -180px;
+  transition: 0.3s;
+  padding: 15px;
+  width: 15%;
+  text-decoration: none;
+  font-size: 20px;
+  color: white;
+  border-radius: 0 5px 5px 0;
+}
+
+#mySidenav a:hover {
+  left: 0;
+}
+
+#imprumutate {
+  top: 150px;
+  background-color: #4CAF50;
+}
+#disponibile {
+  top: 210px;
+  background-color: rgb(255, 204, 0);
+}
+#recenzii {
+  top: 270px;
+  background-color: rgb(255, 153, 0);
+}
+#logout {
+  top: 330px;
+  background-color: #f44336;
+}
+.icon-file {
+  padding-left: 20px;
+}
+.icon-book {
+  padding-left: 30px;
+}
+.icon-pencil {
+  padding-left: 95px;
+}
+.icon-logout {
+  padding-left: 105px;
+}
+.position {
+  font-size: 20px;
+  padding-left: 350px;
+}
+.button {
+  background-color: rgb(185, 122, 87);
+  color: rgb(255, 255, 153);
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+}
+.button:hover {
+  background-color: rgb(255, 255, 153);
+  color: black;
+}
+</style>
+</head>
+
+<body>
+	<img class="book" src="../img/book.png">
+
+	<div id="mySidenav" class="sidenav">
+	  <a href="carti_imprumutate.html" id="imprumutate">Cărți împrumutate <i class="fa fa-file icon-file"></i></a>
+	  <a href="carti_disponibile.html" id="disponibile">Cărți disponibile <i class="fa fa-book icon-book"></i></a>
+	  <a href="recenzii.html" id="recenzii">Recenzii <i class="fa fa-pencil icon-pencil"></i></a>
+	  <a href="logout.php" id="logout">Logout <i class="fa fa-sign-out icon-logout"></i></a>
+	</div>
+	
+	
+	<div class="position">Cărți disponibile:</div><br>
+		
+	<form class="position">
+		<select name="gen" onchange="afisare(this.value)">
+		  <option value="">Alege un gen</option>
+		  <option value="Roman polițist">Roman polițist</option>
+		  <option value="Nuvelă psihologică">Nuvelă psihologică</option>
+		  <option value="Roman de dragoste">Roman de dragoste</option>
+		  <option value="Roman realist">Roman realist</option>
+		  <option value="Roman social">Roman social</option>
+		  <option value="tot">Toate cărțile</option>
+		</select>
+	</form>
+
+	<div class="position" id="txtHint"></div>
+		
+	<form class="form">
+      <fieldset class="fieldset">
+         <legend>Adaugă/Modifică/Șterge o carte</legend>
+         <label for="titlu">Titlu:</label><br>
+         <input type="text" size="30" maxlength="30" name="titlu" id="titlu" required ><br><br>
+		 <label for="autor">Autor:</label><br>
+         <input type="text" size="30" maxlength="30" name="autor" id="autor" required ><br><br>
+         <label for="pagini">Număr pagini:</label><br>
+         <input type="text" size="30" maxlength="30" name="pagini" id="pagini" required ><br><br>
+         
+		 <select name="gen" id="gen">
+		   <option value="">Alege un gen</option>
+		   <option value="Roman polițist">Roman polițist</option>
+		   <option value="Nuvelă psihologică">Nuvelă psihologică</option>
+		   <option value="Roman de dragoste">Roman de dragoste</option>
+		   <option value="Roman realist">Roman realist</option>
+		   <option value="Roman social">Roman social</option>
+		 </select><br><br>
+		 
+		 <button class="button" id="adauga">Adaugă</button>
+		 <button class="button" id="modifica">Modifică</button>
+		 <button class="button" id="sterge">Șterge</button>
+	  </fieldset>
+	</form>
+	
+	<script>
+		var adauga = document.getElementById('adauga');
+		var modifica = document.getElementById('modifica');
+		var sterge = document.getElementById('sterge');
+		function afisare(str) {
+		  var xhttp;  
+		  if (str == "") {
+			document.getElementById("txtHint").innerHTML = "";
+			return;
+		  }
+		  xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+			  document.getElementById("txtHint").innerHTML = this.responseText;
+			}
+		  };
+		  xhttp.open("GET", "carti.php?q="+str, true);
+		  xhttp.send();
+		}
+		adauga.onclick = function() {
+		  var xhttp;  
+		  var titlu = document.getElementById("titlu").value;
+		  var autor = document.getElementById("autor").value;
+		  var pagini = document.getElementById("pagini").value;
+		  var gen = document.getElementById("gen").value;
+		  if (titlu == "" || pagini == "" || autor == "" || gen == "") {
+			return;
+		  }
+		  xhttp = new XMLHttpRequest();
+		  xhttp.open("POST", "adauga.php?titlu="+titlu+
+							"&autor="+autor+"&pagini="+pagini+"&gen="+gen, true);
+		  xhttp.send();
+		}
+		modifica.onclick = function() {
+		  var xhttp;  
+		  var titlu = document.getElementById("titlu").value;
+		  var autor = document.getElementById("autor").value;
+		  var pagini = document.getElementById("pagini").value;
+		  var gen = document.getElementById("gen").value;
+		  if (titlu == "" || pagini == "" || autor == "" || gen == "") {
+			return;
+		  }
+		  xhttp = new XMLHttpRequest();
+		  xhttp.open("POST", "modifica.php?titlu="+titlu+
+							"&autor="+autor+"&pagini="+pagini+"&gen="+gen, true);
+		  xhttp.send();
+		}
+		sterge.onclick = function() {
+		  var xhttp;  
+		  var titlu = document.getElementById("titlu").value;
+		  var autor = document.getElementById("autor").value;
+		  if (titlu == "" || pagini == "") {
+			return;
+		  }
+		  xhttp = new XMLHttpRequest();
+		  xhttp.open("POST", "sterge.php?titlu="+titlu+"&autor="+autor, true);
+		  xhttp.send();
+		}
+	</script>
+	
+</body>

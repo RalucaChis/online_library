@@ -1,0 +1,129 @@
+<html lang="ro">
+<head>
+   <meta charset="UTF-8">
+   <title>Biblioteca Online</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body{
+	background-color: rgb(185, 122, 87);
+}
+h3,a{
+	color: rgb(255, 255, 153);
+	text-align: center;
+}
+.book{
+	width: 15%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto; 
+}
+#mySidenav a {
+  position: absolute;
+  left: -180px;
+  transition: 0.3s;
+  padding: 15px;
+  width: 15%;
+  text-decoration: none;
+  font-size: 20px;
+  color: white;
+  border-radius: 0 5px 5px 0;
+}
+
+#mySidenav a:hover {
+  left: 0;
+}
+
+#imprumutate {
+  top: 150px;
+  background-color: #4CAF50;
+}
+#disponibile {
+  top: 210px;
+  background-color: rgb(255, 204, 0);
+}
+#recenzii {
+  top: 270px;
+  background-color: rgb(255, 153, 0);
+}
+#logout {
+  top: 330px;
+  background-color: #f44336;
+}
+.icon-file {
+  padding-left: 20px;
+}
+.icon-book {
+  padding-left: 30px;
+}
+.icon-pencil {
+  padding-left: 95px;
+}
+.icon-logout {
+  padding-left: 105px;
+}
+form {
+	width:30%;
+	color: rgb(255, 255, 153);
+}
+fieldset {
+	border: 2px solid white;
+}
+.button {
+  background-color: rgb(185, 122, 87);
+  color: rgb(255, 255, 153);
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+}
+.button:hover {
+  background-color: rgb(255, 255, 153);
+  color: black;
+}
+.position {
+  font-size: 20px;
+  color: rgb(255, 255, 153);
+  padding-left: 350px;
+}
+
+</style>
+</head>
+
+<body>
+	<img class="book" src="../img/book.png">
+	<h3>Recenzii</h3>
+
+	<div id="mySidenav" class="sidenav">
+	  <a href="carti_imprumutate.html" id="imprumutate">Cărți împrumutate <i class="fa fa-file icon-file"></i></a>
+	  <a href="carti_disponibile.html" id="disponibile">Cărți disponibile <i class="fa fa-book icon-book"></i></a>
+	  <a href="recenzii.html" id="recenzii">Recenzii <i class="fa fa-pencil icon-pencil"></i></a>
+	  <a href="logout.php" id="logout">Logout <i class="fa fa-sign-out icon-logout"></i></a>
+	</div>
+	
+	<label class="position" for="titlu" >Caută o carte după titlu:</label>
+	<input type="text" size="20" maxlength="20" id="titlu" name="titlu" required>
+	
+	<button id="search" class="button">Caută</button><br><br>
+	
+	<div class="position" id="txtHint">Nu sunt recenzii pentru această carte.</div><br>
+	
+	<script>
+		var search = document.getElementById('search');
+		search.onclick = function() {
+		  var xhttp;  
+		  var titlu = document.getElementById("titlu").value;
+		  if (titlu == ""){
+			return;
+		  }
+		  xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+			  document.getElementById("txtHint").innerHTML = this.responseText;
+			}
+		  };
+		  xhttp.open("GET", "recenzii.php?titlu="+titlu, true);
+		  xhttp.send();
+		}
+	</script>
+	
+</body>

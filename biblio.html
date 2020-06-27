@@ -1,0 +1,87 @@
+<?php
+	session_start();
+	
+	if ( !isset( $_SESSION['username'] ) ) {
+		header("location: login.php");
+	}
+?>
+<html lang="ro">
+<head>
+   <meta charset="UTF-8">
+   <title>Biblioteca Online</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body{
+	background-image: url('./img/wallpaper.png');
+}
+h3,a{
+	color: rgb(255, 255, 153);
+	text-align: center;
+}
+.book{
+	width: 15%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto; 
+}
+#mySidenav a {
+  position: absolute;
+  left: -180px;
+  transition: 0.3s;
+  padding: 15px;
+  width: 15%;
+  text-decoration: none;
+  font-size: 20px;
+  color: white;
+  border-radius: 0 5px 5px 0;
+}
+
+#mySidenav a:hover {
+  left: 0;
+}
+
+#imprumutate {
+  top: 150px;
+  background-color: #4CAF50;
+}
+#disponibile {
+  top: 210px;
+  background-color: rgb(255, 204, 0);
+}
+#recenzii {
+  top: 270px;
+  background-color: rgb(255, 153, 0);
+}
+#logout {
+  top: 330px;
+  background-color: #f44336;
+}
+.icon-file {
+  padding-left: 20px;
+}
+.icon-book {
+  padding-left: 33px;
+}
+.icon-pencil {
+  padding-left: 95px;
+}
+.icon-logout {
+  padding-left: 105px;
+}
+</style>
+</head>
+
+<body>
+	
+	<img class="book" src="./img/book.png">
+	<h3>Bine ai venit, cititorule! Îți dorim lectură ușoară și nu uita:</h3>
+	<h3><i>Adevăratul posesor al unei cărţi nu e cel care o cumpără, ci acela care o citeşte</i> - William Ospina</h3>
+
+	<div id="mySidenav" class="sidenav">
+	  <a href="carti_imprumutate.html" id="imprumutate">Cărți împrumutate <i class="fa fa-file icon-file"></i></a>
+	  <a href="carti_disponibile.html" id="disponibile">Cărți disponibile <i class="fa fa-book icon-book"></i></a>
+	  <a href="recenzii.html" id="recenzii">Recenzii <i class="fa fa-pencil icon-pencil"></i></a>
+	  <a href="logout.php" id="logout">Logout <i class="fa fa-sign-out icon-logout"></i></a>
+	</div>
+	
+</body>
